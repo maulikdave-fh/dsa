@@ -84,9 +84,33 @@ public class BinarySearchTreeTest {
 
 	@Test
 	void testBSTFromSortedArray_whenNonEmptyArrayIsSupplied_shouldReturnBSTRootNode() {
-		int[] nums = { 1, 2, 3, 4, 5 };
-		Node<Integer> root = BinarySearchTree.fromSortedArray(nums);
+		Integer[] nums = { 1, 2, 3, 4, 5 };
+		Node<Integer> root = new BinarySearchTree<Integer>().fromSortedArray(nums);
 		assertEquals(3, root.value());
+		assertEquals(1, root.left().value());
+		assertEquals(2, root.left().right().value());
+		assertEquals(4, root.right().value());
+		assertEquals(5, root.right().right().value());
 	}
+	
+	@Test
+	void testInvert_whenNonEmptyBSTIsSupplied_shouldInvertedBSTRootNode() {
+		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+		bst.insert(47);
+		bst.insert(21);
+		bst.insert(76);
+		bst.insert(18);
+		bst.insert(27);
+		bst.insert(52);
+		bst.insert(82);
+		Node<Integer> root = bst.invertTree();
+		assertEquals(76, root.left().value());
+		assertEquals(21, root.right().value());
+		assertEquals(18, root.right().right().value());
+		assertEquals(27, root.right().left().value());
+		assertEquals(82, root.left().left().value());
+		assertEquals(52, root.left().right().value());
+	}
+	
 
 }

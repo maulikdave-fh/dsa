@@ -103,18 +103,36 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		delete(root, value);
 	}
 
-	private static Node<Integer> sortedArrayToBST(int[] nums, int left, int right) {
-		// Insert a root node
-		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-		bst.insert(nums[(right - left) / 2]);
+	private Node<T> sortedArrayToBST(T[] nums, int left, int right) {
+		if (left > right)
+			return null;
 
-		// Left branch
+		int midIndex = left + ((right - left) / 2);
 
-		return bst.root;
+		Node<T> node = new Node<>(nums[midIndex]);
+		node.left = sortedArrayToBST(nums, left, midIndex - 1);
+		node.right = sortedArrayToBST(nums, midIndex + 1, right);
+
+		return node;
 	}
 
-	public static Node<Integer> fromSortedArray(int[] nums) {
+	public Node<T> fromSortedArray(T[] nums) {
 		return sortedArrayToBST(nums, 0, nums.length - 1);
+	}
+
+	private Node<T> invertTree(Node<T> node) {
+		if (node == null)
+			return null;
+
+		Node<T> temp = node.left;
+		node.left = invertTree(node.right);
+		node.right = invertTree(temp);
+
+		return node;
+	}
+
+	public Node<T> invertTree() {
+		return invertTree(root);
 	}
 
 	public Node<T> root() {
