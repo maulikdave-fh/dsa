@@ -334,7 +334,7 @@ class LinkedListTest {
 		ll.append(5);
 		assertEquals(30, ll.middle(ll.head().get()).value());
 	}
-	
+
 	@Test
 	void testMergeSort_whenEvenNumOfNodes() {
 		LinkedList<Integer> ll = new LinkedList<>();
@@ -342,7 +342,11 @@ class LinkedListTest {
 		ll.append(60);
 		ll.append(30);
 		ll.append(5);
-		System.out.println(ll.mergeSort(ll.head().get()));
+		Node<Integer> head = ll.mergeSort(ll.head().get());
+		assertEquals(1, head.value());
+		assertEquals(5, head.next().value());
+		assertEquals(30, head.next().next().value());
+		assertEquals(60, head.next().next().next().value());
 	}
 
 }

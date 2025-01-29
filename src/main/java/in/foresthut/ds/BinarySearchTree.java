@@ -165,7 +165,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		queue.enqueue(currentNode);
 
 		while (queue.length() > 0) {
-			System.out.println(queue);
 			currentNode = queue.dequeue().value();
 			result.add(currentNode.value());
 			if (currentNode.left != null)
