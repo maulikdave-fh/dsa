@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class MergeSort {
 
-	static int[] mergeSort(int[] arr) {
+	public static int[] mergeSort(int[] arr) {
 		if (arr.length == 1) return arr;
 		
 		int midIndex = arr.length / 2;
