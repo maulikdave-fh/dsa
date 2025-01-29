@@ -2,7 +2,7 @@ package in.foresthut.ds;
 
 import java.util.Optional;
 
-public class LinkedList<T> {
+public class LinkedList<T extends Comparable<T>> {
 	private Node<T> head;
 	private Node<T> tail;
 	private int length;
@@ -10,6 +10,10 @@ public class LinkedList<T> {
 	static class Node<T> {
 		private T value;
 		private Node<T> next;
+
+		Node() {
+
+		}
 
 		Node(T value) {
 			this.value = value;
@@ -126,42 +130,42 @@ public class LinkedList<T> {
 		}
 		return false;
 	}
-	
+
 	public boolean insert(int index, T value) {
 		if (index < 0 || index > length)
 			return false;
-		
+
 		if (index == 0) {
-			prepend(value);		
+			prepend(value);
 			return true;
 		} else if (index == length) {
 			append(value);
 			return true;
 		} else {
-			Optional<Node<T>> temp = get(index-1);
+			Optional<Node<T>> temp = get(index - 1);
 			if (temp.isPresent()) {
 				Node<T> newNode = new Node<>(value);
 				Node<T> before = temp.get();
 				Node<T> after = temp.get().next();
 				before.next = newNode;
-				newNode.next = after;				
+				newNode.next = after;
 				length++;
 				return true;
 			}
-		}		
+		}
 		return false;
 	}
-	
-	public Optional<Node<T>> remove(int index){
+
+	public Optional<Node<T>> remove(int index) {
 		if (index < 0 || index >= length)
 			return Optional.empty();
-		
+
 		if (index == 0)
 			return removeFirst();
 		else if (index == length - 1)
 			return removeLast();
 		else {
-			Optional<Node<T>> temp = get(index-1);
+			Optional<Node<T>> temp = get(index - 1);
 			Node<T> before = temp.get();
 			Node<T> toBeRemoved = temp.get().next();
 			before.next = toBeRemoved.next;
@@ -169,6 +173,135 @@ public class LinkedList<T> {
 			length--;
 			return Optional.of(toBeRemoved);
 		}
+	}
+
+	public void bubbleSort() {
+		if (length == 0 || length == 1)
+			return;
+
+		if (length == 2) {
+			T temp = head.value;
+			head.value = tail.value;
+			tail.value = temp;
+			return;
+		}
+
+		Node<T> start = head;
+		Node<T> end = tail;
+		int i = 0;
+		while (i < length) {
+			while (start != end) {
+				if (start.value.compareTo(start.next.value) >= 0) {
+					T temp = start.value;
+					start.value = start.next.value;
+					start.next.value = temp;
+				}
+				start = start.next;
+			}
+			end = start;
+			start = head;
+			i++;
+		}
+	}
+
+	public void selectionSort() {
+		if (length < 2)
+			return;
+
+		Node<T> walker = head;
+		while (walker != null) {
+			Node<T> minValueNode = walker;
+			Node<T> innerWalker = walker.next;
+
+			while (innerWalker != null) {
+				if (minValueNode.value.compareTo(innerWalker.value) >= 0) {
+					minValueNode = innerWalker;
+				}
+				innerWalker = innerWalker.next;
+			}
+			if (minValueNode.value.compareTo(walker.value) != 0) {
+				T temp = minValueNode.value;
+				minValueNode.value = walker.value;
+				walker.value = temp;
+			}
+			walker = walker.next;
+		}
+	}
+
+	// Not written by me
+	public void insertionSort() {
+		if (length < 2) {
+			return; // List is already sorted
+		}
+
+		Node<T> sortedListHead = head;
+		Node<T> unsortedListHead = head.next;
+		sortedListHead.next = null;
+
+		while (unsortedListHead != null) {
+			Node<T> current = unsortedListHead;
+			unsortedListHead = unsortedListHead.next;
+
+			if (current.value.compareTo(sortedListHead.value) < 0) {
+				current.next = sortedListHead;
+				sortedListHead = current;
+			} else {
+				Node<T> searchPointer = sortedListHead;
+				while (searchPointer.next != null && current.value.compareTo(searchPointer.next.value) > 0) {
+					searchPointer = searchPointer.next;
+				}
+				current.next = searchPointer.next;
+				searchPointer.next = current;
+			}
+		}
+
+		head = sortedListHead;
+		Node<T> temp = head;
+		while (temp.next != null) {
+			temp = temp.next;
+		}
+		tail = temp;
+	}
+
+	Node<T> mergeSort(Node<T> currentHead) {
+		if (currentHead == null || currentHead.next == null)
+			return currentHead;
+
+		Node<T> middle = middle(currentHead);
+
+		Node<T> left = mergeSort(currentHead);
+		Node<T> right = mergeSort(middle);
+
+		return merge(left, right);
+	}
+
+	Node<T> merge(Node<T> list1, Node<T> list2) {
+		Node<T> dummyHead = new Node<>();
+		Node<T> tail = dummyHead;
+		while (list1 != null && list2 != null) {
+			if (list1.value.compareTo(list2.value) < 0) {
+				tail.next = list1;
+				list1 = list1.next;
+				tail = tail.next;
+			} else {
+				tail.next = list2;
+				list2 = list2.next;
+				tail = tail.next;
+			}
+		}
+		tail.next = (list1 != null) ? list1 : list2;
+		return dummyHead.next;
+	}
+
+	Node<T> middle(Node<T> head) {
+        Node<T> midPrev = null;
+        while (head != null && head.next != null) {
+            midPrev = (midPrev == null) ? head : midPrev.next;
+            head = head.next.next;
+        }
+        Node<T> mid = midPrev.next;
+        midPrev.next = null;
+        return mid;
 	}
 
 	public Optional<Node<T>> head() {
@@ -181,5 +314,18 @@ public class LinkedList<T> {
 
 	public int length() {
 		return length;
-	}	
+	}
+
+	@Override
+	public String toString() {
+		Node<T> temp = head;
+		StringBuilder sb = new StringBuilder("{ ");
+		while (temp != null) {
+			sb.append(temp.value + " ");
+			temp = temp.next;
+		}
+		sb.append("}");
+
+		return sb.toString();
+	}
 }

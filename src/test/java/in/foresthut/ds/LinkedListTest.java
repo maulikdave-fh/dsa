@@ -121,21 +121,21 @@ class LinkedListTest {
 		Optional<Node<Integer>> actual = ll.get(2);
 		assertEquals(Optional.empty(), actual);
 	}
-	
+
 	@Test
 	void testGet_whenIndexIsOOB_shouldReturnEmpty() {
 		LinkedList<Integer> ll = new LinkedList<>();
 		Optional<Node<Integer>> actual = ll.get(2);
 		assertEquals(Optional.empty(), actual);
 	}
-	
+
 	@Test
 	void testGet_whenIndexIsZero_shouldReturnHead() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
 		Optional<Node<Integer>> actual = ll.get(0);
 		assertEquals(ll.head(), actual);
 	}
-	
+
 	@Test
 	void testGet_whenIndexIsForTail_shouldReturnTail() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -143,7 +143,7 @@ class LinkedListTest {
 		Optional<Node<Integer>> actual = ll.get(1);
 		assertEquals(ll.tail(), actual);
 	}
-	
+
 	@Test
 	void testGet_whenIndexIsValid_shouldReturnNode() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -152,21 +152,21 @@ class LinkedListTest {
 		Optional<Node<Integer>> actual = ll.get(1);
 		assertEquals(ll.head().get().next(), actual.get());
 	}
-	
+
 	@Test
 	void testSet_whenIndexIsValid_shouldUpdateNode() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
 		assertTrue(ll.set(0, 3));
 		assertEquals(3, ll.get(0).get().value());
 	}
-	
+
 	@Test
 	void testSet_whenIndexIsNotValid_shouldReturnFalse() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
 		assertFalse(ll.set(2, 3));
 		assertEquals(1, ll.get(0).get().value());
 	}
-	
+
 	@Test
 	void testInsert_whenIndexIsZero_shouldInsertNode() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -176,7 +176,7 @@ class LinkedListTest {
 		assertEquals(5, ll.get(0).get().value());
 		assertEquals(4, ll.length());
 	}
-	
+
 	@Test
 	void testInsert_whenIndexIsForTail_shouldInsertNode() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -185,7 +185,7 @@ class LinkedListTest {
 		assertTrue(ll.insert(3, 5));
 		assertEquals(5, ll.get(3).get().value());
 	}
-	
+
 	@Test
 	void testInsert_whenIndexIsValid_shouldInsertNode() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -195,7 +195,7 @@ class LinkedListTest {
 		assertEquals(5, ll.get(1).get().value());
 		assertEquals(4, ll.length());
 	}
-	
+
 	@Test
 	void testRemove_whenIndexIsZero_shouldRemoveHead() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -206,7 +206,7 @@ class LinkedListTest {
 		assertEquals(head, removed);
 		assertEquals(2, ll.length());
 	}
-	
+
 	@Test
 	void testRemove_whenIndexIsForTail_shouldRemoveTail() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -217,7 +217,7 @@ class LinkedListTest {
 		assertEquals(tail, removed);
 		assertEquals(2, ll.length());
 	}
-	
+
 	@Test
 	void testRemove_whenIndexIsValid_shouldRemoveNode() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
@@ -228,13 +228,121 @@ class LinkedListTest {
 		assertEquals(toBeRemoved, removed.get());
 		assertEquals(2, ll.length());
 	}
-	
+
 	@Test
 	void testRemove_whenIndexIsOOB_shouldReturnEmpty() {
 		LinkedList<Integer> ll = new LinkedList<>(1);
 		Optional<Node<Integer>> removed = ll.remove(1);
 		assertEquals(Optional.empty(), removed);
 		assertEquals(1, ll.length());
+	}
+
+	@Test
+	void testBubbleSort_whenLLHas2Nodes_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(2);
+		ll.append(1);
+		ll.bubbleSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(2, ll.tail().get().value());
+	}
+
+	@Test
+	void testBubbleSort_whenLLHasMoreThan2Nodes_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(3);
+		ll.append(1);
+		ll.append(3);
+		ll.append(2);
+		ll.bubbleSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(2, ll.head().get().next().value());
+		assertEquals(3, ll.tail().get().value());
+	}
+
+	@Test
+	void testSelectionSort_whenLLHas2Nodes_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(2);
+		ll.append(1);
+		ll.selectionSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(2, ll.tail().get().value());
+	}
+
+	@Test
+	void testSelectionSort_whenLLHasMoreThan2Nodes_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(3);
+		ll.append(1);
+		ll.append(2);
+		ll.append(3);
+		ll.selectionSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(2, ll.head().get().next().value());
+		assertEquals(3, ll.tail().get().value());
+	}
+
+	@Test
+	void testInsertionSort_whenLLHas2Nodes_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(2);
+		ll.append(1);
+		ll.insertionSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(2, ll.tail().get().value());
+	}
+
+	@Test
+	void testInsertionSort_whenLLHasMoreThan2NodesWithDuplicates_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(3);
+		ll.append(1);
+		ll.append(2);
+		ll.append(3);
+		ll.insertionSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(2, ll.head().get().next().value());
+		assertEquals(3, ll.tail().get().value());
+	}
+
+	@Test
+	void testInsertionSort_whenLLHasMoreThan2Nodes_shouldSort() {
+		LinkedList<Integer> ll = new LinkedList<>(4);
+		ll.append(2);
+		ll.append(6);
+		ll.append(5);
+		ll.append(1);
+		ll.append(3);
+
+		ll.insertionSort();
+		assertEquals(1, ll.head().get().value());
+		assertEquals(6, ll.tail().get().value());
+	}
+
+	@Test
+	void testMiddle_whenOddNumOfNodes() {
+		LinkedList<Integer> ll = new LinkedList<>();
+		ll.append(10);
+		ll.append(1);
+		ll.append(60);
+		ll.append(30);
+		ll.append(5);
+		assertEquals(60, ll.middle(ll.head().get()).value());
+	}
+
+	@Test
+	void testMiddle_whenEvenNumOfNodes() {
+		LinkedList<Integer> ll = new LinkedList<>();
+		ll.append(1);
+		ll.append(60);
+		ll.append(30);
+		ll.append(5);
+		assertEquals(30, ll.middle(ll.head().get()).value());
+	}
+	
+	@Test
+	void testMergeSort_whenEvenNumOfNodes() {
+		LinkedList<Integer> ll = new LinkedList<>();
+		ll.append(1);
+		ll.append(60);
+		ll.append(30);
+		ll.append(5);
+		System.out.println(ll.mergeSort(ll.head().get()));
 	}
 
 }
