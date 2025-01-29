@@ -1,5 +1,9 @@
 package in.foresthut.ds;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class BinarySearchTree<T extends Comparable<T>> {
 	private Node<T> root;
 
@@ -25,8 +29,26 @@ public class BinarySearchTree<T extends Comparable<T>> {
 		}
 
 		@Override
+		public int hashCode() {
+			return Objects.hash(value);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			@SuppressWarnings("unchecked")
+			Node<T> other = (Node<T>) obj;
+			return Objects.equals(value, other.value);
+		}
+
+		@Override
 		public String toString() {
-			return "Node [value=" + value + ", left=" + left + ", right=" + right + "]";
+			return String.valueOf(value);
 		}
 	}
 
@@ -134,6 +156,141 @@ public class BinarySearchTree<T extends Comparable<T>> {
 	public Node<T> invertTree() {
 		return invertTree(root);
 	}
+
+	public List<T> BFS() {
+		Node<T> currentNode = root;
+		Queue<Node<T>> queue = new Queue<>();
+		List<T> result = new ArrayList<>();
+
+		queue.enqueue(currentNode);
+
+		while (queue.length() > 0) {
+			System.out.println(queue);
+			currentNode = queue.dequeue().value();
+			result.add(currentNode.value());
+			if (currentNode.left != null)
+				queue.enqueue(currentNode.left);
+			if (currentNode.right != null)
+				queue.enqueue(currentNode.right);
+		}
+
+		return result;
+	}
+
+	public List<T> DFSPreOrder() {
+		List<T> result = new ArrayList<>();
+
+		class Traverse {
+			Traverse(Node<T> currentNode) {
+				result.add(currentNode.value);
+
+				if (currentNode.left != null)
+					new Traverse(currentNode.left);
+
+				if (currentNode.right != null)
+					new Traverse(currentNode.right);
+			}
+
+		}
+		new Traverse(root);
+		return result;
+	}
+
+	public List<T> DFSPostOrder() {
+		List<T> result = new ArrayList<>();
+
+		class Traverse {
+			Traverse(Node<T> currentNode) {
+				if (currentNode.left != null) {
+					new Traverse(currentNode.left);
+				}
+
+				if (currentNode.right != null) {
+					new Traverse(currentNode.right);
+				}
+
+				result.add(currentNode.value);
+			}
+		}
+		new Traverse(root);
+		return result;
+	}
+
+	public List<T> DFSInOrder() {
+		List<T> result = new ArrayList<>();
+
+		class Traverse {
+			Traverse(Node<T> currentNode) {
+				if (currentNode.left != null) {
+					new Traverse(currentNode.left);
+				}
+
+				result.add(currentNode.value);
+
+				if (currentNode.right != null) {
+					new Traverse(currentNode.right);
+				}
+
+			}
+		}
+		new Traverse(root);
+
+		return result;
+	}
+
+	public boolean isValid() {
+		List<T> sorted = DFSInOrder();
+		for (int index = 1; index < sorted.size(); index++) {
+			if (sorted.get(index).compareTo(sorted.get(index - 1)) < 0)
+				return false;
+		}
+		return true;
+	}
+
+	public T kthSmallest(int k) {
+		if (k < 1)
+			return null;
+		List<T> result = DFSInOrder();
+		return result.get(k - 1);
+	}
+
+	private int maxDepth(Node<T> currentNode) {
+		if (currentNode == null)
+			return 0;
+
+		int leftHeight = maxDepth(currentNode.left);
+		int rightHeight = maxDepth(currentNode.right);
+
+		return Math.max(leftHeight, rightHeight) + 1;
+
+	}
+
+	public int maxDepth() {
+		if (root == null)
+			return 0;
+
+		return maxDepth(root);
+	}
+
+	private boolean hasPathSum(Node<T> currentNode, int targetSum) {
+		if (currentNode == null)
+			return false;
+
+		targetSum -= (Integer) currentNode.value;
+
+		if (currentNode.left == null && currentNode.right == null)
+			return (targetSum == 0);
+
+		return hasPathSum(currentNode.left, targetSum) || hasPathSum(currentNode.right, targetSum);
+	}
+
+	public boolean hasPathSum(int targetSum) {
+		if (root == null)
+			return false;
+
+		return hasPathSum(root, targetSum);
+	}
+
 
 	public Node<T> root() {
 		return root;
