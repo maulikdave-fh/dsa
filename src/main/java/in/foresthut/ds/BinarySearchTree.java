@@ -172,7 +172,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
 			if (currentNode.right != null)
 				queue.enqueue(currentNode.right);
 		}
-
 		return result;
 	}
 
@@ -233,7 +232,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
 			}
 		}
 		new Traverse(root);
-
 		return result;
 	}
 
@@ -289,7 +287,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
 		return hasPathSum(root, targetSum);
 	}
-
 
 	public Node<T> root() {
 		return root;
