@@ -23,7 +23,7 @@ public class Stack<T> {
 		top = newNode;
 		height = 1;
 	}
-	
+
 	public void push(T value) {
 		Node<T> newNode = new Node<>(value);
 		if (top == null) {
@@ -33,5 +33,33 @@ public class Stack<T> {
 			top = newNode;
 		}
 		height++;
+	}
+
+	public Node<T> pop() {
+		if (top == null)
+			return null;
+
+		Node<T> temp = top;
+		top = top.next;
+		temp.next = null;
+
+		height--;
+		return temp;
+	}
+
+	public int height() {
+		return height;
+	}
+
+	@Override
+	public String toString() {
+		Node<T> temp = top;
+		StringBuilder sb = new StringBuilder();
+		while (temp != null) {
+			sb.append(temp.value + "\n");
+			temp = temp.next;
+		}
+
+		return sb.toString();
 	}
 }
